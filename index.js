@@ -1,7 +1,5 @@
 'use strict';
 
-console.log("HERE I AM!");
-
 var debug = require('debug')('express-idempotency');
 var connect = require('connect');
 var expressEnd = require('express-end');
@@ -29,6 +27,7 @@ var checkMw = function(req, res, next) {
     return next();
   }
 
+  console.log("storedResponse", storedResponse);
   res.status(storedResponse.statusCode);
   res.set(storedResponse.headers);
   res.set('X-Cache', 'HIT'); // indicate this was served from cache
