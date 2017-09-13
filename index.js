@@ -1,5 +1,7 @@
 'use strict';
 
+console.log("HERE I AM!");
+
 var debug = require('debug')('express-idempotency');
 var connect = require('connect');
 var expressEnd = require('express-end');
@@ -9,9 +11,9 @@ var generateCacheKey = require('./lib/generate-cache-key');
 
 /**
  * Express middleware
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
  */
 var checkMw = function(req, res, next) {
   var idempotencyKey = req.get('Idempotency-Key');
