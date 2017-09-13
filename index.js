@@ -27,7 +27,7 @@ var checkMw = function(req, res, next) {
     return next();
   }
 
-  console.log("storedResponse", storedResponse);
+  console.log("checkMw:storedResponse", storedResponse);
   res.status(storedResponse.statusCode);
   res.set(storedResponse.headers);
   res.set('X-Cache', 'HIT'); // indicate this was served from cache
@@ -51,6 +51,7 @@ function storeMw(req, res, next) {
         headers: res.headers,
       };
 
+      console.log("storeMw:responseToStore ", responseToStore);
       const cacheKey = generateCacheKey(req, idempotencyKey);
       cache.set(cacheKey, responseToStore)
       debug('stored response against idempotency key: ', idempotencyKey);
