@@ -25,10 +25,10 @@ module.exports = function (opt) {
 
  function wrap(orig) {
      return function (obj) {
+         this.__body = obj;
          console.log("#wrap - before");
          orig(obj);
          console.log("#wrap - after");
-         this.__body = obj;
          console.log("obj: ", obj);
      };
    }
