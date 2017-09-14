@@ -27,6 +27,7 @@ module.exports = function (opt) {
      return function (obj) {
          orig(obj);
          this.__body = obj;
+         console.log("obj: ", obj);
      };
    }
 
@@ -75,6 +76,7 @@ function storeMw(req, res, next) {
         headers: res._headers,
       };
 
+      console.log("res.__body ", res.body);
       console.log("responseToStore ", responseToStore);
       const cacheKey = generateCacheKey(req, idempotencyKey);
       cache.set(cacheKey, responseToStore)

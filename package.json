@@ -1,6 +1,6 @@
 {
   "name": "@optimuspay/express-idempotency",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Express middleware to make requests idempotent",
   "main": "index.js",
   "engines": {
