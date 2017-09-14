@@ -27,8 +27,6 @@ module.exports = function (opt) {
      return function (obj) {
          orig(obj);
          this.__body = obj;
-         console.log("obj ", obj);
-         console.log("this ", this);
      };
    }
 
@@ -57,7 +55,7 @@ var checkMw = function(req, res, next) {
   res.status(storedResponse.statusCode);
   res.set(storedResponse.headers);
   res.set(options.cacheHeader, options.cacheHeaderValue); // indicate this was served from cache
-  res.send(storedResponse.body);
+  res.send(storedResponse.__body);
 }
 
 /**
