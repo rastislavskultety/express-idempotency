@@ -51,6 +51,7 @@ function storeMw(req, res, next) {
         headers: res.headers,
       };
 
+      console.log("storeMw:res ", res);
       console.log("storeMw:responseToStore ", responseToStore);
       const cacheKey = generateCacheKey(req, idempotencyKey);
       cache.set(cacheKey, responseToStore)
