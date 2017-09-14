@@ -33,6 +33,7 @@ module.exports = function (opt) {
 
 
 var checkMw = function(req, res, next) {
+    console.log("#checkMw");
 
     if (!res.__isJSONWrapped) {
         res.json = wrap(res.json.bind(res));
@@ -67,7 +68,9 @@ var checkMw = function(req, res, next) {
  * @param {function} next Express next callback function
  */
 function storeMw(req, res, next) {
+    console.log("#storeMw");
   res.once('end', () => {
+      console.log("#storeMw.end");
     const idempotencyKey = req.get('Idempotency-Key');
     if (idempotencyKey) {
       const responseToStore = {
