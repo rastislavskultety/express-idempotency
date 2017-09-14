@@ -26,6 +26,7 @@ module.exports = function (opt) {
  function wrap(orig) {
      return function (obj) {
          this.__body = obj;
+         orig.apply(this, arguments)
          console.log("#wrap - before! ", this.__body);
          orig(obj);
          console.log("#wrap - after!");
@@ -33,13 +34,18 @@ module.exports = function (opt) {
      };
    }
 
+function monkey(obj) {
+
+}
 
 var checkMw = function(req, res, next) {
     console.log("#checkMw");
 
     if (!res.__isJSONWrapped) {
-        res.json = wrap(res.json.bind(res));
-        if (req.jsonp) res.jsonp = wrap(res.jsonp.bind(res));
+        // res.__json = res.json;
+        // res.__jsonp = res.jsonp;
+            res.json = wrap(res.json);
+        // if (req.jsonp) res.jsonp = wrap.bind(res.jsonp.bind(res));
         res.__isJSONWrapped = true;
     }
 
