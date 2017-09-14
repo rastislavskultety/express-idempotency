@@ -84,7 +84,6 @@ function storeMw(req, res, next) {
   return next();
 }
 
-return function (options) {
   // chain pattern from helmet - see https://github.com/helmetjs/helmet/blob/master/index.js
   var chain = connect();
   chain.use(expressEnd);
