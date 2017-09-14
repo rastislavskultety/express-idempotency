@@ -13,7 +13,32 @@ var generateCacheKey = require('./lib/generate-cache-key');
  * @param {*} res
  * @param {*} next
  */
+
+var default_options = {
+    cacheHeader: "cached-result",
+    cacheHeaderValue: "1"
+}
+
+module.exports = function (opt) {
+
+    var options = Object.assign({}, default_options, opt);
+
+ function wrap(orig) {
+     return function (obj) {
+         orig(obj);
+         res.body = obj;
+     };
+   }
+
+
 var checkMw = function(req, res, next) {
+
+    if (!res.__isJSONWrapped) {
+        res.json = wrap(res.json.bind(res));
+        if (req.jsonp) res.jsonp = wrap(res.jsonp.bind(res));
+        res.__isJSONWrapped = true;
+    }
+
   var idempotencyKey = req.get('Idempotency-Key');
 
   if (!idempotencyKey) {
@@ -27,10 +52,9 @@ var checkMw = function(req, res, next) {
     return next();
   }
 
-  console.log("checkMw:storedResponse", storedResponse);
   res.status(storedResponse.statusCode);
   res.set(storedResponse.headers);
-  res.set('X-Cache', 'HIT'); // indicate this was served from cache
+  res.set(options.cacheHeader, options.cacheHeaderValue); // indicate this was served from cache
   res.send(storedResponse.body);
 }
 
@@ -48,11 +72,10 @@ function storeMw(req, res, next) {
       const responseToStore = {
         statusCode: res.statusCode,
         body: res.body,
-        headers: res.headers,
+        headers: res._headers,
       };
 
-      console.log("storeMw:res ", res);
-      console.log("storeMw:responseToStore ", responseToStore);
+      console.log("responseToStore ", responseToStore);
       const cacheKey = generateCacheKey(req, idempotencyKey);
       cache.set(cacheKey, responseToStore)
       debug('stored response against idempotency key: ', idempotencyKey);
@@ -61,7 +84,7 @@ function storeMw(req, res, next) {
   return next();
 }
 
-var idempotency = function (options) {
+return function (options) {
   // chain pattern from helmet - see https://github.com/helmetjs/helmet/blob/master/index.js
   var chain = connect();
   chain.use(expressEnd);
@@ -69,5 +92,3 @@ var idempotency = function (options) {
   chain.use(storeMw);
   return chain;
 }
-
-module.exports = idempotency;
