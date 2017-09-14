@@ -26,9 +26,9 @@ module.exports = function (opt) {
  function wrap(orig) {
      return function (obj) {
          this.__body = obj;
-         console.log("#wrap - before");
+         console.log("#wrap - before! ", this.__body);
          orig(obj);
-         console.log("#wrap - after");
+         console.log("#wrap - after!");
          console.log("obj: ", obj);
      };
    }
