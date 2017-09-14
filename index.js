@@ -25,9 +25,10 @@ module.exports = function (opt) {
 
  function wrap(orig) {
      return function (obj) {
-         console.log("this ", this);
          orig(obj);
-         this.body = obj;
+         this.__body = obj;
+         console.log("obj ", obj);
+         console.log("this ", this);
      };
    }
 
@@ -72,7 +73,7 @@ function storeMw(req, res, next) {
     if (idempotencyKey) {
       const responseToStore = {
         statusCode: res.statusCode,
-        body: res.body,
+        body: res.__body,
         headers: res._headers,
       };
 
