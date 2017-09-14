@@ -26,7 +26,7 @@ module.exports = function (opt) {
  function wrap(orig) {
      return function (obj) {
          orig(obj);
-         res.body = obj;
+         this.body = obj;
      };
    }
 
